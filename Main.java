@@ -1,12 +1,22 @@
 public class Main {
     public static void main(String[] args) {
-        Todo todo1 = new Todo(1, "Kupiti mleko");
-        Todo todo2 = new Todo(2, "Nauciti Kafku");
+        TodoRepository repo = new TodoRepository();
 
-        System.out.println(todo1);
-        System.out.println(todo2);
+        repo.save("Kupiti mleko");
+        repo.save("Nauciti Kafku");
+        repo.save("Zavrsiti todo app");
 
-        todo1.setCompleted(true);
-        System.out.println(todo1);
+        System.out.println("-- Sve:");
+        repo.findAll().forEach(System.out::println);
+
+        repo.update(2, "Nauciti Kafku", true);
+
+        System.out.println("-- Posle update:");
+        repo.findAll().forEach(System.out::println);
+
+        repo.deleteById(1);
+
+        System.out.println("-- Posle delete:");
+        repo.findAll().forEach(System.out::println);
     }
 }
