@@ -1,10 +1,10 @@
-public class Todo {
+public class Task {
 
     private int id;
     private String title;
     private boolean completed;
 
-    public Todo(int id, String title) {
+    public Task(int id, String title) {
         this.id = id;
         this.title = title;
         this.completed = false;

@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        TodoRepository repo = new TodoRepository();
+        TaskRepository repo = new TaskRepository();
 
         repo.save("Kupiti mleko");
         repo.save("Nauciti Kafku");
