@@ -12,9 +12,11 @@ public class TaskHandler implements HttpHandler {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final TaskRepository repo;
+    private final KafkaEventProducer kafka;
 
-    public TaskHandler(TaskRepository repo) {
+    public TaskHandler(TaskRepository repo, KafkaEventProducer kafka) {
         this.repo = repo;
+        this.kafka = kafka;
     }
 
     @Override
@@ -44,15 +46,19 @@ public class TaskHandler implements HttpHandler {
             send(exchange, 400, Map.of("error", "title is required"));
             return;
         }
-        send(exchange, 201, repo.save(title));
+        Task task = repo.save(title);
+        kafka.send("task.created", task);
+        send(exchange, 201, task);
     }
 
     private void handleDelete(HttpExchange exchange, int id) throws IOException {
+        Task task = repo.findById(id);
         boolean deleted = repo.deleteById(id);
         if (!deleted) {
             send(exchange, 404, Map.of("error", "Task not found"));
             return;
         }
+        kafka.send("task.deleted", task);
         exchange.sendResponseHeaders(204, -1);
         exchange.close();
     }
